@@ -1,2 +1,3 @@
 # MPC
-Model Predictive Control
+model learning and MPC control for autonomous racecars
+
