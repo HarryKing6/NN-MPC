@@ -1,7 +1,26 @@
-#include <torch/script.h>   // One-stop header.
+#include "nn.h"
 
-#include <iostream>
-#include <memory>
+namespace mpcc{
+NN::nnModel()
+:Ts_(1.0)
+{
+    std::cout << "default constructor, not everything is initialized properly" << std::endl;
+}
+
+NN::nnModel(double Ts,const PathToJson &path)
+:Ts_(Ts),param_(Param(path.param_path))
+{
+}
+
+
+
+
+}
+
+
+
+
+
 
 int main(int argc, const char* argv[]) {
   
