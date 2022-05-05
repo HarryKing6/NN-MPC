@@ -51,6 +51,7 @@ private:
 
     Param param_;
     const double Ts_;
+    torch::jit::script::Module module;
   
 };
 

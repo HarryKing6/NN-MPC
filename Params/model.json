@@ -1,5 +1,7 @@
 
 {
+  "nnModel" : "traced_model.pt",
+
   "Cm1" : 0.287,
   "Cm2" : 0.0545,
 

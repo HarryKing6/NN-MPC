@@ -4,14 +4,29 @@ namespace mpcc{
 NN::nnModel()
 :Ts_(1.0)
 {
-    std::cout << "default constructor, not everything is initialized properly" << std::endl;
+  std::cout << "default constructor, not everything is initialized properly" << std::endl;
 }
 
 NN::nnModel(double Ts,const PathToJson &path)
 :Ts_(Ts),param_(Param(path.param_path))
 {
+  module = torch::jit::load("traced_model.pt");
 }
 
+
+LinModelMatrix NN::getLinModel(const State &x, const Input &u) const{
+    
+    // compute linearized and discretized model
+    const LinModelMatrix lin_model_c = getModelJacobian(x,u);
+    // discretize the system
+    return discretizeModel(lin_model_c);
+}
+
+LinModelMatrix NN::getModelJacobian(const State &x, const Input &u) const
+{
+    
+
+}
 
 
 
