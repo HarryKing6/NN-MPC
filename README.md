@@ -10,7 +10,9 @@ To install all the dependencies run
 ```
 ## Build the project 
 ```
-cmake CMakeList.txt
+mkdir build 
+cd build 
+cmake CMakeList.txt ..
 make
 ```
 
