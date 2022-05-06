@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-project(MPCC)
+project(NN-MPC)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "-O2")
@@ -11,8 +11,9 @@ include_directories(External/matplotlib)
 include_directories(External/Eigen)
 include_directories(External/Json/include)
 
-add_executable(MPCC
+add_executable(NN-MPC
         main.cpp
+        torch.cpp
         types.cpp
         types.h
         config.h
@@ -37,7 +38,10 @@ add_executable(MPCC
         Plotting/plotting.h)
 
 find_package(Python COMPONENTS Development)
-target_include_directories(MPCC PRIVATE ${Python_INCLUDE_DIRS})
-target_link_libraries(MPCC ${Python_LIBRARIES})
+find_package(Torch REQUIRED)
 
-target_link_libraries(MPCC ${CMAKE_SOURCE_DIR}/External/hpipm/lib/lib/libhpipm.a ${CMAKE_SOURCE_DIR}/External/blasfeo/lib/lib/libblasfeo.a m)
+target_include_directories(NN-MPC PRIVATE ${Python_INCLUDE_DIRS})
+target_link_libraries(NN-MPC ${Python_LIBRARIES})
+target_link_libraries(NN-MPC ${TORCH_LIBRARIES})
+
+target_link_libraries(NN-MPC ${CMAKE_SOURCE_DIR}/External/hpipm/lib/lib/libhpipm.a ${CMAKE_SOURCE_DIR}/External/blasfeo/lib/lib/libblasfeo.a m)
