@@ -34,6 +34,7 @@ constraints_(Constraints(Ts,path)),
 cost_(Cost(path)),
 integrator_(Integrator(Ts,path)),
 model_(Model(Ts,path)),
+nn_(NN(Ts,path)),
 track_(ArcLengthSpline(path))
 {
     n_sqp_ = n_sqp;

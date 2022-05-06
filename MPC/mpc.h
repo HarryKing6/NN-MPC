@@ -22,6 +22,7 @@
 #include "Params/params.h"
 #include "Spline/arc_length_spline.h"
 #include "Model/model.h"
+#include "Model/nn.h"
 #include "Model/integrator.h"
 #include "Cost/cost.h"
 #include "Constraints/constraints.h"
@@ -116,6 +117,7 @@ private:
     const double Ts_;
 
     Model model_;
+    NN nn_;
     Integrator integrator_;
     Cost cost_;
     Constraints constraints_;

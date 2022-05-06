@@ -30,7 +30,19 @@ Param::Param(std::string file){
     std::ifstream iModel(file);
     json jsonModel;
     iModel >> jsonModel;
+    
     // Model Parameters
+    vx_min = jsonModel["vx_min"];
+    vx_max = jsonModel["vx_max"];
+    vy_min = jsonModel["vy_min"];
+    vy_max = jsonModel["vy_max"];
+    r_min = jsonModel["r_min"];
+    r_max = jsonModel["r_max"];
+    D_min = jsonModel["D_min"];
+    D_max = jsonModel["D_max"];
+    delta_min = jsonModel["delta_min"];
+    delta_max = jsonModel["delta_max"];
+
     Cm1 = jsonModel["Cm1"];
     Cm2 = jsonModel["Cm2"];
 

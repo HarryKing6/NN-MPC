@@ -30,6 +30,17 @@ using json = nlohmann::json;
 
 class Param{
 public:
+    double vx_min;
+    double vx_max;
+    double vy_min;
+    double vy_max;
+    double r_min;
+    double r_max;
+    double D_min;
+    double D_max;
+    double delta_min;
+    double delta_max;
+
     double Cm1;
     double Cm2;
     double Cr0;

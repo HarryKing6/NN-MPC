@@ -1,3 +1,7 @@
+#ifndef MPCC_NN_H
+#define MPCC_NN_H
+
+
 #include <torch/script.h>   // One-stop header.
 
 #include <iostream>
@@ -6,16 +10,11 @@
 #include "config.h"
 #include "types.h"
 #include "Params/params.h"
+#include "Model/model.h"
 
 namespace mpcc{
 
-struct LinModelMatrix {
-    A_MPC A;
-    B_MPC B;
-    g_MPC g;
-};
-
-struct ModelDerivatives{
+struct NNDerivatives{
     const double dF1_vx;
     const double dF1_vy;
     const double dF1_r;
@@ -40,23 +39,30 @@ class NN {
 public:
 
     LinModelMatrix getLinModel(const State &x, const Input &u) const;
+    at::Tensor nnOutput(const State &x, const Input &u) const;
     
-    nnModel();
-    nnModel(double Ts const PathToJson &path);
+    NN();
+    NN(double Ts, const PathToJson &path);
 
 private: 
 
     LinModelMatrix getModelJacobian(const State &x, const Input &u) const;
     LinModelMatrix discretizeModel(const LinModelMatrix &lin_model_c) const;
+    std::vector<double> normalize(double vx, double vy, double r, double D, double delta);
 
     Param param_;
     const double Ts_;
     torch::jit::script::Module module;
-  
+    torch::Tensor input;
+
+    
 };
 
 
 
 
 }
+
+
+#endif //MPCC_NN_H
 
