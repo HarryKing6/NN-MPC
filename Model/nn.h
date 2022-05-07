@@ -38,24 +38,25 @@ struct NNDerivatives{
 class NN {
 public:
 
-    LinModelMatrix getLinModel(const State &x, const Input &u) const;
-    at::Tensor nnOutput(const State &x, const Input &u) const;
+    StateVector getF(const State &x,const Input &u);
+    LinModelMatrix getLinModel(const State &x, const Input &u);
+    std::vector<double> nnOutput(double vx, double vy, double r, double D, double delta);
     
     NN();
     NN(double Ts, const PathToJson &path);
 
 private: 
 
-    LinModelMatrix getModelJacobian(const State &x, const Input &u) const;
+    LinModelMatrix getModelJacobian(const State &x, const Input &u);
     LinModelMatrix discretizeModel(const LinModelMatrix &lin_model_c) const;
-    std::vector<double> normalize(double vx, double vy, double r, double D, double delta);
+    std::vector<double> normalize(double vx, double vy, double r, double D, double delta) const;
+    std::vector<double> denormalize(double vx, double vy, double r, double D, double delta) const;
 
     Param param_;
     const double Ts_;
-    torch::jit::script::Module module;
-    torch::Tensor input;
+    torch::Tensor input_tensor = torch::rand({1, 4, 5});
+    torch::jit::Module module;
 
-    
 };
 
 
