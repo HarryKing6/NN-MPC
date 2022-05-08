@@ -72,7 +72,13 @@ void MPC::setStage(const State &xk, const Input &uk, const int time_step)
     xk_nz.vxNonZero(param_.vx_zero);
 
     stages_[time_step].cost_mat = normalizeCost(cost_.getCost(track_,xk_nz,time_step));
-    stages_[time_step].lin_model = normalizeDynamics(model_.getLinModel(xk_nz,uk));
+
+    // ************************************************************************************
+    // Use model 
+    // stages_[time_step].lin_model = normalizeDynamics(model_.getLinModel(xk_nz,uk));
+    // Use nn 
+    stages_[time_step].lin_model = normalizeDynamics(nn_.getLinModel(xk_nz,uk));
+    //************************************************************************************
     stages_[time_step].constrains_mat = normalizeCon(constraints_.getConstraints(track_,xk_nz,uk));
 
     stages_[time_step].l_bounds_x = normalization_param_.T_x_inv*bounds_.getBoundsLX();

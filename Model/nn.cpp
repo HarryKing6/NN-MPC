@@ -12,12 +12,12 @@ NN::NN(double Ts,const PathToJson &path)
 {
   module = torch::jit::load("traced_model.pt");  
 
-  std::vector<double> input_vector = normalize(0, 0, 0, 0, 0);
+  std::vector<double> input_vector = normalize(0.2, 0, 0, 0, 0);
   std::cout << input_vector << "\n";
 
   for(int i=0; i<4; i++){
     for(int j=0; j<5; j++){
-      input_tensor[0][i][j] = input_vector[j];
+      input_tensor[0][i][j] = float(input_vector[j]);
     }
   }
 
@@ -56,7 +56,6 @@ LinModelMatrix NN::getLinModel(const State &x, const Input &u){
     
   // compute linearized and discretized model
   const LinModelMatrix lin_model_c = getModelJacobian(x,u);
-  // discretize the system
   return lin_model_c;
 }
 
@@ -174,31 +173,45 @@ LinModelMatrix NN::getModelJacobian(const State &x, const Input &u)
   const StateVector f = getF(x,u);
   g_c = f - A_c*stateToVector(x) - B_c*inputToVector(u);
 
-  return {A_c,B_c,g_c};
-}
-
-std::vector<double> NN::nnOutput(double vx, double vy, double r, double D, double delta)
-{
-
-  std::vector<double> input_vector = normalize(vx, vy, r, D, delta);
-
+  // update tensor 
   for(int i=0; i<3; i++){
     for(int j=0; j<5; j++){
       input_tensor[0][i][j] = input_tensor[0][i+1][j];
     }
   }
+  input_tensor[0][3][0] = float(vx);
+  input_tensor[0][3][1] = float(vy);
+  input_tensor[0][3][2] = float(r);
+  input_tensor[0][3][3] = float(D);
+  input_tensor[0][3][4] = float(delta);
+
+  return {A_c,B_c,g_c};
+
+}
+
+std::vector<double> NN::nnOutput(double vx, double vy, double r, double D, double delta)
+{
+
+  std::vector<double> input_v = normalize(vx, vy, r, D, delta);
+  at::Tensor input_t = input_tensor;
+
+  for(int i=0; i<3; i++){
+    for(int j=0; j<5; j++){
+      input_t[0][i][j] = input_t[0][i+1][j];
+    }
+  }
   for(int j=0; j<5; j++){
-    input_tensor[0][4][j] = input_vector[j]; 
+    input_t[0][3][j] = float(input_v[j]); 
   }
 
   
   std::vector<torch::jit::IValue> inputs;
-  inputs.push_back(input_tensor);
+  inputs.push_back(input_t);
 
   at::Tensor output = module.forward(inputs).toTensor(); 
-  std::vector<double> output_v(output.data_ptr<double>(), output.data_ptr<double>() + output.numel());
+  std::vector<float> output_v(output.data_ptr<float>(), output.data_ptr<float>() + output.numel());
   
-  return denormalize(output_v[0],output_v[1],output_v[2]);
+  return denormalize(double(output_v[0]),double(output_v[1]),double(output_v[2]));
 }
 
 std::vector<double> NN::normalize(double vx, double vy, double r, double D, double delta) const{
