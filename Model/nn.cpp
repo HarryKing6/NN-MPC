@@ -198,14 +198,14 @@ std::vector<double> NN::nnOutput(double vx, double vy, double r, double D, doubl
   at::Tensor output = module.forward(inputs).toTensor(); 
   std::vector<double> output_v(output.data_ptr<double>(), output.data_ptr<double>() + output.numel());
   
-  return denormalize(output_v[0],output_v[1],output_v[2],output_v[3],output_v[4]);
+  return denormalize(output_v[0],output_v[1],output_v[2]);
 }
 
 std::vector<double> NN::normalize(double vx, double vy, double r, double D, double delta) const{
   std::vector<double> norm(5);
   vx = (vx - param_.vx_min) / (param_.vx_max - param_.vx_min);
   norm.push_back(vx);
-  vy = (vy - param_.vx_min) / (param_.vy_max - param_.vy_min);
+  vy = (vy - param_.vy_min) / (param_.vy_max - param_.vy_min);
   norm.push_back(vy);
   r = (r - param_.r_min) / (param_.r_max - param_.r_min);
   norm.push_back(r);
@@ -217,19 +217,14 @@ std::vector<double> NN::normalize(double vx, double vy, double r, double D, doub
   return norm;
 }
 
-std::vector<double> NN::denormalize(double vx, double vy, double r, double D, double delta) const{
-  std::vector<double> denorm(5);
-  vx = vx * (param_.vx_max-param_.vx_min) + param_.vx_min;
-  denorm.push_back(vx);
-  vy = vy * (param_.vy_max-param_.vy_min) + param_.vy_min;
-  denorm.push_back(vy);
-  r = r * (param_.r_max-param_.r_min) + param_.r_min;
-  denorm.push_back(r);
-  D = D * (param_.D_max-param_.D_min) + param_.D_min;
-  denorm.push_back(D);
-  delta = delta * (param_.delta_max-param_.delta_min) + param_.delta_min;
-  denorm.push_back(delta);
-
+std::vector<double> NN::denormalize(double dvx, double dvy, double dr) const{
+  std::vector<double> denorm(3);
+  dvx = dvx * (param_.dvx_max-param_.dvx_min) + param_.dvx_min;
+  denorm.push_back(dvx);
+  dvy = dvy * (param_.dvy_max-param_.dvy_min) + param_.dvy_min;
+  denorm.push_back(dvy);
+  dr = dr * (param_.dr_max-param_.dr_min) + param_.dr_min;
+  denorm.push_back(dr);
   return denorm;
 }
 

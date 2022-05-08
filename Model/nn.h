@@ -50,7 +50,7 @@ private:
     LinModelMatrix getModelJacobian(const State &x, const Input &u);
     LinModelMatrix discretizeModel(const LinModelMatrix &lin_model_c) const;
     std::vector<double> normalize(double vx, double vy, double r, double D, double delta) const;
-    std::vector<double> denormalize(double vx, double vy, double r, double D, double delta) const;
+    std::vector<double> denormalize(double dvx, double dvy, double dr) const;
 
     Param param_;
     const double Ts_;

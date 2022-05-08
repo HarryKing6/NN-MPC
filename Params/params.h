@@ -40,6 +40,12 @@ public:
     double D_max;
     double delta_min;
     double delta_max;
+    double dvx_min;
+    double dvx_max;
+    double dvy_min;
+    double dvy_max;
+    double dr_min;
+    double dr_max;
 
     double Cm1;
     double Cm2;

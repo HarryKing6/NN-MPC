@@ -42,6 +42,12 @@ Param::Param(std::string file){
     D_max = jsonModel["D_max"];
     delta_min = jsonModel["delta_min"];
     delta_max = jsonModel["delta_max"];
+    dvx_min = jsonModel["dvx_min"];
+    dvx_max = jsonModel["dvx_max"];
+    dvy_min = jsonModel["dvy_min"];
+    dvy_max = jsonModel["dvy_max"];
+    dr_min = jsonModel["dr_min"];
+    dr_max = jsonModel["dr_max"];
 
     Cm1 = jsonModel["Cm1"];
     Cm2 = jsonModel["Cm2"];
