@@ -250,8 +250,14 @@ MPCReturn MPC::runMPC(State &x0)
     //TODO: this is one approach to handle solver errors, works well in simulation
     n_no_solves_sqp_ = 0;
     for(int i=0;i<n_sqp_;i++)
-    {
+    {   
+        auto t1 = std::chrono::high_resolution_clock::now();
         setMPCProblem();
+        auto t2 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+        std::cout << "setMPCProblem time:" << time_span.count() << "\n";
+
+
         State x0_normalized = vectorToState(normalization_param_.T_x_inv * stateToVector(x0));
         optimal_solution_ = solver_interface_ -> solveMPC(stages_, x0_normalized, &solver_status);
         optimal_solution_ = deNormalizeSolution(optimal_solution_);
@@ -259,6 +265,10 @@ MPCReturn MPC::runMPC(State &x0)
             n_no_solves_sqp_++;
         if(solver_status <= 1)
             initial_guess_ = sqpSolutionUpdate(initial_guess_, optimal_solution_);
+        auto t3 = std::chrono::high_resolution_clock::now();
+        time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t3 - t2);
+        std::cout << "solveMPC time:" << time_span.count() << "\n";
+
     }
 
     const int max_error = std::max(n_sqp_-1,1);
